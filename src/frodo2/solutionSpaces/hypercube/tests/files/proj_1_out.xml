@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hypercube>
+  <domains>
+    <variable name="X1" type="frodo2.solutionSpaces.AddableInteger" order="0">0 1 2</variable>
+    <variable name="X2" type="frodo2.solutionSpaces.AddableInteger" order="1">0 1 2</variable>
+  </domains>
+  <utility_values type="frodo2.solutionSpaces.AddableInteger">
+    <variable name="X1" value="0">2 5 8</variable>
+    <variable name="X1" value="1">11 14 17</variable>
+    <variable name="X1" value="2">20 23 26</variable>
+  </utility_values>
+</hypercube>
+

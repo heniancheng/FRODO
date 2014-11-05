@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<instance xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="src/frodo2/algorithms/XCSPschema.xsd">
+<presentation name="customized_dcop_problem" maxConstraintArity="2" maximize="false" format="XCSP 2.1_FRODO">
+    <stats name="number of nodes">4</stats>
+  </presentation>
+  <agents nbAgents="4">
+    <agent name="a1" />
+    <agent name="a2" />
+    <agent name="a3" />
+    <agent name="a4" />
+  </agents>
+  <domains nbDomains="1">
+    <domain name="domain_values" nbValues="2">0..1</domain>
+  </domains>
+  <variables nbVariables="4">
+    <variable name="n1" domain="domain_values" agent="a1" />
+    <variable name="n2" domain="domain_values" agent="a2" />
+    <variable name="n3" domain="domain_values" agent="a3" />
+    <variable name="n4" domain="domain_values" agent="a4" />
+  </variables>
+  <relations nbRelations="1">
+    <relation name="cost_constraint1_2" semantics="soft" arity="2" defaultCost="0" nbTuples="4">5: 0 0 |  8: 0 1 | 20: 1 0 | 3: 1 1</relation>
+	<relation name="cost_constraint1_3" semantics="soft" arity="2" defaultCost="0" nbTuples="4">5: 0 0 | 10: 0 1 | 20: 1 0 | 3: 1 1</relation>
+	<relation name="cost_constraint2_3" semantics="soft" arity="2" defaultCost="0" nbTuples="4">5: 0 0 |  4: 0 1 |  3: 1 0 | 3: 1 1</relation>
+	<relation name="cost_constraint2_4" semantics="soft" arity="2" defaultCost="0" nbTuples="4">3: 0 0 |  8: 0 1 | 10: 1 0 | 3: 1 1</relation>
+  </relations>
+  <constraints nbConstraints="8">
+    <constraint name="n1_con_n2" scope="n1 n2" arity="2" reference="cost_constraint1_2" />
+    <constraint name="n1_con_n3" scope="n1 n3" arity="2" reference="cost_constraint1_3" />
+    <constraint name="n2_con_n3" scope="n2 n3" arity="2" reference="cost_constraint2_3" />
+    <constraint name="n2_con_n4" scope="n2 n4" arity="2" reference="cost_constraint2_4" />
+  </constraints>
+</instance>

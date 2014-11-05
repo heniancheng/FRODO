@@ -1,0 +1,24 @@
+<instance xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../algorithms/XCSPschema.xsd">
+	<presentation name="sampleProblem" maxConstraintArity="2" maximize="false" format="XCSP 2.1_FRODO" />
+	<agents nbAgents="3">
+		<agent name="agentX" />
+		<agent name="agentY" />
+		<agent name="agentZ" />
+	</agents>
+	<domains nbDomains="1">
+		<domain name="three_colors" nbValues="3">1..3</domain>
+	</domains>
+	<variables nbVariables="3">
+		<variable name="X" domain="three_colors" agent="agentX" />
+		<variable name="Y" domain="three_colors" agent="agentY" />
+		<variable name="Z" domain="three_colors" agent="agentZ" />
+	</variables>
+	<relations nbRelations="1">
+		<relation name="NEQ" arity="2" nbTuples="5" semantics="soft" defaultCost="0">infinity: 1 1|2 2|3 3|1 2|2 1</relation>
+	</relations>
+	<constraints nbConstraints="3">
+		<constraint name="X_and_Y_have_different_colors" arity="2" scope="X Y" reference="NEQ" />
+		<constraint name="X_and_Z_have_different_colors" arity="2" scope="X Z" reference="NEQ" />
+		<constraint name="Y_and_Z_have_different_colors" arity="2" scope="Y Z" reference="NEQ" />
+	</constraints>
+</instance>

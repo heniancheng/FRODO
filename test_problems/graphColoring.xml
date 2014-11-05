@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<instance xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="src/frodo2/algorithms/XCSPschema.xsd">
+  <presentation name="graphColoring_1385451189874" maxConstraintArity="2" maximize="false" format="XCSP 2.1_FRODO">
+    <stats name="number of nodes">7</stats>
+    <stats name="target density">0.4</stats>
+    <stats name="true average density">0.38095238095238093</stats>
+    <stats name="target unary tightness">0.0</stats>
+    <stats name="true average unary tightness">0.0</stats>
+    <stats name="number of colors">3</stats>
+    <stats name="number of uncontrollable nodes">0</stats>
+    <stats name="number of disconnected components">1</stats>
+    <stats name="max degree">3</stats>
+  </presentation>
+  <agents nbAgents="7">
+    <agent name="a0" />
+    <agent name="a1" />
+    <agent name="a2" />
+    <agent name="a3" />
+    <agent name="a4" />
+    <agent name="a5" />
+    <agent name="a6" />
+  </agents>
+  <domains nbDomains="1">
+    <domain name="colors" nbValues="3">1..3</domain>
+  </domains>
+  <variables nbVariables="7">
+    <variable name="n0" domain="colors" agent="a0" />
+    <variable name="n1" domain="colors" agent="a1" />
+    <variable name="n2" domain="colors" agent="a2" />
+    <variable name="n3" domain="colors" agent="a3" />
+    <variable name="n4" domain="colors" agent="a4" />
+    <variable name="n5" domain="colors" agent="a5" />
+    <variable name="n6" domain="colors" agent="a6" />
+  </variables>
+  <relations nbRelations="1">
+    <relation name="neq" semantics="soft" arity="2" defaultCost="0" nbTuples="3">infinity: 1 1 | 2 2 | 3 3</relation>
+  </relations>
+  <constraints nbConstraints="8">
+    <constraint name="n0_neq_n3" scope="n0 n3" arity="2" reference="neq" />
+    <constraint name="n4_neq_n5" scope="n4 n5" arity="2" reference="neq" />
+    <constraint name="n1_neq_n4" scope="n1 n4" arity="2" reference="neq" />
+    <constraint name="n3_neq_n6" scope="n3 n6" arity="2" reference="neq" />
+    <constraint name="n1_neq_n2" scope="n1 n2" arity="2" reference="neq" />
+    <constraint name="n0_neq_n1" scope="n0 n1" arity="2" reference="neq" />
+    <constraint name="n2_neq_n3" scope="n2 n3" arity="2" reference="neq" />
+    <constraint name="n4_neq_n6" scope="n4 n6" arity="2" reference="neq" />
+  </constraints>
+</instance>

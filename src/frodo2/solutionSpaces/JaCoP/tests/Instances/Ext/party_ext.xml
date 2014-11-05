@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<instance xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../algorithms/XCSPschema.xsd">
+  <presentation name="partyProblem" maximize="false" format="XCSP 2.1_FRODO" maxConstraintArity="3" />
+  <agents nbAgents="4">
+  	<agent name="p0" />
+  	<agent name="p1" />
+  	<agent name="p2" />
+  	<agent name="p3" />
+  </agents>
+  <domains nbDomains="1">
+    <domain name="Strategies" nbValues="2">0 1</domain>
+  </domains>
+  <variables nbVariables="10">
+    <variable name="p0s0" domain="Strategies" agent="p0" />
+    <variable name="p0s1" domain="Strategies" agent="p0" />
+    <variable name="p0s2" domain="Strategies" agent="p0" />
+    <variable name="p1s1" domain="Strategies" agent="p1" />
+    <variable name="p1s0" domain="Strategies" agent="p1" />
+    <variable name="p2s2" domain="Strategies" agent="p2" />
+    <variable name="p2s0" domain="Strategies" agent="p2" />
+    <variable name="p2s3" domain="Strategies" agent="p2" />
+    <variable name="p3s3" domain="Strategies" agent="p3" />
+    <variable name="p3s2" domain="Strategies" agent="p3" />
+  </variables>
+  <relations nbRelations="5">
+    <relation name="EQ" arity="2" nbTuples="2" semantics="soft" defaultCost="infinity">0: 0 0 | 1 1</relation>
+    <relation name="p0_rel" arity="3" semantics="soft" defaultCost="0" nbTuples="4">infinity: 
+0 0 1|
+0 1 1|
+1 0 1|
+1 1 1</relation>
+    <relation name="p1_rel" arity="2" semantics="soft" defaultCost="0" nbTuples="2">infinity: 
+0 1|
+1 0</relation>
+    <relation name="p2_rel" arity="3" semantics="soft" defaultCost="0" nbTuples="4">infinity: 
+0 0 1|
+0 1 1|
+1 0 0|
+1 1 1</relation>
+    <relation name="p3_rel" arity="2" semantics="soft" defaultCost="0" nbTuples="2">infinity: 
+0 1|
+1 0</relation>
+  </relations>
+  <constraints nbConstraints="10">
+    <constraint name="p0s1_EQ_p1s1" arity="2" scope="p0s1 p1s1" reference="EQ" />
+    <constraint name="p0s2_EQ_p2s2" arity="2" scope="p0s2 p2s2" reference="EQ" />
+    <constraint name="p0_const" arity="3" scope="p0s1 p0s2 p0s0" reference="p0_rel" />
+    <constraint name="p1s0_EQ_p0s0" arity="2" scope="p1s0 p0s0" reference="EQ" />
+    <constraint name="p1_const" arity="2" scope="p1s0 p1s1" reference="p1_rel" />
+    <constraint name="p2s0_EQ_p0s0" arity="2" scope="p2s0 p0s0" reference="EQ" />
+    <constraint name="p2s3_EQ_p3s3" arity="2" scope="p2s3 p3s3" reference="EQ" />
+    <constraint name="p2_const" arity="3" scope="p2s0 p2s3 p2s2" reference="p2_rel" />
+    <constraint name="p3s2_EQ_p2s2" arity="2" scope="p3s2 p2s2" reference="EQ" />
+    <constraint name="p3_const" arity="2" scope="p3s2 p3s3" reference="p3_rel" />
+  </constraints>
+</instance>
+

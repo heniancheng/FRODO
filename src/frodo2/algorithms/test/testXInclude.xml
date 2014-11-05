@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<instance xmlns:xi="http://www.w3.org/2001/XInclude" xml:base="file:src/frodo2/algorithms/test/">
+<xi:include href="include1.xml"/>
+<xi:include href="include2.xml"/>
+</instance>

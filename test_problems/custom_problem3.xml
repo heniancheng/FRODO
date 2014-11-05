@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<instance xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="src/frodo2/algorithms/XCSPschema.xsd">
+<presentation name="customized_dcop_problem" maxConstraintArity="2" maximize="false" format="XCSP 2.1_FRODO">
+    <stats name="number of nodes">14</stats>
+  </presentation>
+  <agents nbAgents="14">
+    <agent name="a0" />
+    <agent name="a1" />
+    <agent name="a2" />
+    <agent name="a3" />
+	<agent name="a4" />
+	<agent name="a5" />
+	<agent name="a6" />
+	<agent name="a7" />
+	<agent name="a8" />
+	<agent name="a9" />
+	<agent name="a10" />
+	<agent name="a11" />
+	<agent name="a12" />
+	<agent name="a13" />
+  </agents>
+  <domains nbDomains="1">
+    <domain name="domain_values" nbValues="2">0..1</domain>
+  </domains>
+  <variables nbVariables="14">
+    <variable name="x0"  domain="domain_values" agent="a0" />
+    <variable name="x1"  domain="domain_values" agent="a1" />
+    <variable name="x2"  domain="domain_values" agent="a2" />
+    <variable name="x3"  domain="domain_values" agent="a3" />
+	<variable name="x4"  domain="domain_values" agent="a4" />
+	<variable name="x5"  domain="domain_values" agent="a5" />
+	<variable name="x6"  domain="domain_values" agent="a6" />
+	<variable name="x7"  domain="domain_values" agent="a7" />
+	<variable name="x8"  domain="domain_values" agent="a8" />
+	<variable name="x9"  domain="domain_values" agent="a9" />
+	<variable name="x10" domain="domain_values" agent="a10" />
+	<variable name="x11" domain="domain_values" agent="a11" />
+	<variable name="x12" domain="domain_values" agent="a12" />
+	<variable name="x13" domain="domain_values" agent="a13" />
+  </variables>
+  <relations nbRelations="1">
+    <relation name="cost_constraint" semantics="soft" arity="2" defaultCost="0" nbTuples="4">1: 0 0 | 3: 0 1 | 2: 1 0 | 4: 1 1</relation>
+  </relations>
+  <constraints nbConstraints="17">
+    <constraint name="x0_con_x1"  scope="x0 x1"  arity="2" reference="cost_constraint" />
+    <constraint name="x0_con_x2"  scope="x0 x2"  arity="2" reference="cost_constraint" />
+    <constraint name="x0_con_x8"  scope="x0 x8"  arity="2" reference="cost_constraint" />
+    <constraint name="x0_con_x11" scope="x0 x11" arity="2" reference="cost_constraint" />
+	<constraint name="x1_con_x3"  scope="x1 x3"  arity="2" reference="cost_constraint" />
+	<constraint name="x1_con_x4"  scope="x1 x4"  arity="2" reference="cost_constraint" />
+	<constraint name="x1_con_x8"  scope="x1 x8"  arity="2" reference="cost_constraint" />
+	<constraint name="x2_con_x5"  scope="x2 x5"  arity="2" reference="cost_constraint" />
+	<constraint name="x2_con_x6"  scope="x2 x6"  arity="2" reference="cost_constraint" />
+	<constraint name="x2_con_x12" scope="x2 x12" arity="2" reference="cost_constraint" />
+	<constraint name="x3_con_x7"  scope="x3 x7"  arity="2" reference="cost_constraint" />
+	<constraint name="x3_con_x8"  scope="x3 x8"  arity="2" reference="cost_constraint" />
+	<constraint name="x4_con_x9"  scope="x4 x9"  arity="2" reference="cost_constraint" />
+	<constraint name="x4_con_x10" scope="x4 x10" arity="2" reference="cost_constraint" />
+	<constraint name="x5_con_x11" scope="x5 x11" arity="2" reference="cost_constraint" />
+	<constraint name="x5_con_x12" scope="x5 x12" arity="2" reference="cost_constraint" />
+	<constraint name="x6_con_x13" scope="x6 x13" arity="2" reference="cost_constraint" />
+  </constraints>
+</instance>

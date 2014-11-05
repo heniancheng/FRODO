@@ -1,0 +1,11 @@
+<MASproblem numberOfAgents="3">
+<agent type="1" name="agent1">
+  local problem 1
+</agent>
+<agent type="2" name="agent2">
+  local problem 2
+</agent>
+<agent type="3" name="agent3">
+  local problem 3
+</agent>
+</MASproblem>

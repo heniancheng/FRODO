@@ -1,0 +1,119 @@
+<!-- 
+FRODO: a FRamework for Open/Distributed Optimization
+Copyright (C) 2008-2013  Thomas Leaute, Brammert Ottens & Radoslaw Szymanek
+
+FRODO is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+FRODO is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+How to contact the authors: 
+<http://frodo2.sourceforge.net/>
+-->
+
+<!-- Overall definition of the agent
+	- measureTime: whether the simulated time metric should be enabled instead of just measuring wall clock time
+	- measureMsgs: whether to measure the number of messages and the total amount of information sent (WARNING! This is computationally expensive)
+ -->
+<agentDescription className = "frodo2.algorithms.SingleQueueAgent" measureTime = "true" measureMsgs = "true" >
+
+	<!-- The MailMan used when measuring time
+		 - mailmanClass: the class of the mailman to be used
+	-->
+	<mailman mailmanClass = "frodo2.communication.mailer.CentralMailer"/>
+	
+	<!-- The XCSP parser that supports VRP constraints 
+		- displayGraph: if true, displays the constraint graph in DOT format (default = false)
+		- publicAgents: whether each agent knows the identity of all other agents (default = false)
+		- domClass: the class to be used for variable values (must be AddableInteger)
+		- utilClass: the class to be used for utility values (should be AddableReal or AddableBigDecimal)
+		- DOTrenderer: the class to be used to display the constraint graph. Supported values:
+			- empty string: displays the constraint graph in DOT format in the console; 
+			- frodo2.gui.DOTrenderer: renders the constraint graph in a new window. Assumes that Graphviz' "dot" command is on the shell path. 
+		- countNCCCs: whether Non-Concurrent Constraint Checks should be counted (default = false)
+	 -->
+	<parser parserClass = "frodo2.benchmarks.vehiclerouting.XCSPparserVRP" 
+			displayGraph = "true" 
+			publicAgents = "true" 
+			domClass = "frodo2.solutionSpaces.AddableInteger" 
+			utilClass = "frodo2.solutionSpaces.AddableReal"
+			DOTrenderer = ""
+			countNCCCs = "true" />
+
+	<!-- A set of modules, each being parameterized by the following attributes: 
+		- className: the name of the class implementing the module
+		- reportStats (only for StatsReporter modules): whether statistics should be reported to the central controller, if any (default = false)
+		- messages (optional): a list of "message" elements, each parameterized by the following attributes: 
+			- name: the name of the public static String field in the module that identifies the message
+			- value: the type to be used for that message
+			- ownerClass (optional): if present, specifies the name of a class, and the attribute "value" is then interpreted as a public static String field of that class
+	 -->
+	<modules>
+	
+		<!-- For each connected component of the constraint graph, elects a root variable for the variable ordering.
+			- nbrSteps: must be greater than the diameter of the largest connected component in the constraint graph
+		 -->
+		<module className = "frodo2.algorithms.varOrdering.election.VariableElection" 
+				nbrSteps = "150" >
+			
+			<!-- The heuristic used to choose the root variable. The following heuristics are available:
+				- frodo2.algorithms.heuristics.VarNameHeuristic 					(default) elects the variable with the lexicographically largest name.
+				- frodo2.algorithms.heuristics.MostConnectedHeuristic 			elects the most connected variable. 
+				- frodo2.algorithms.heuristics.LeastConnectedHeuristic 			elects the least connected variable. 
+				- frodo2.algorithms.heuristics.SmallestDomainHeuristic 			elects the variable with smallest domain.  
+				- frodo2.algorithms.heuristics.RandScoringHeuristic 				elects a random variable. 
+				- frodo2.algorithms.heuristics.ScoringHeuristicWithTiebreaker 	can combine two heuristics, the second being used to break ties.
+			 -->
+			<varElectionHeuristic className = "frodo2.algorithms.heuristics.ScoringHeuristicWithTiebreaker" >
+				<heuristic1 className = "frodo2.algorithms.heuristics.SmallestDomainHeuristic" />
+				<heuristic2 className = "frodo2.algorithms.heuristics.VarNameHeuristic" />
+			</varElectionHeuristic>
+			
+			<messages>
+				<message name = "START_MSG_TYPE" 
+						 value = "START_AGENT" 
+						 ownerClass = "frodo2.algorithms.AgentInterface" />
+			</messages>
+		</module>
+		
+		<!-- Sets up a linear order on all variables, using the max width heuristic, breaking ties by minimizing domain size 
+			- DOTrenderer: the class to be used to display the constraint graph. Supported values:
+				- empty string: displays the constraint graph in DOT format in the console; 
+				- frodo2.gui.DOTrenderer: renders the constraint graph in a new window. Assumes that Graphviz' "dot" command is on the shell path. 
+		-->
+		<module className = "frodo2.algorithms.varOrdering.linear.LinearOrdering" 
+				reportStats = "true"
+				DOTrenderer = ""/>
+
+		<!-- The SynchBB algorithm by Hirayama & Yokoo (CP'97), adapted to solve DCOPs as proposed by Meisels (Springer Verlag, 2008),
+			with two additional performance improvements:
+				- BACKTRACK messages do not include the path
+				- PATH messages strip the first part of the path that has not changed
+			The parameters are the following: 
+				- convergence: whether to keep track of the convergence towards the optimal solution (default = false)
+		-->
+		<module className = "frodo2.algorithms.synchbb.SynchBB" 
+				reportStats = "true" 
+				convergence = "false" >
+			
+			<messages>
+				<message name = "ORDER_MSG_TYPE" 
+						 value = "ORDER_MSG_TYPE" 
+						 ownerClass = "frodo2.algorithms.varOrdering.linear.OrderMsg" />
+				<message name = "ORDER_STATS_MSG_TYPE" 
+						 value = "STATS_MSG_TYPE" 
+						 ownerClass = "frodo2.algorithms.varOrdering.linear.OrderMsg" />
+			</messages>
+		</module>
+
+	</modules>
+</agentDescription>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<instance xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="src/frodo2/algorithms/XCSPschema.xsd">
+  <presentation name="randomMeetingScheduling_1401430583109" format="XCSP 2.1_FRODO" maximize="false">
+    <stats name="formulation">EAV</stats>
+    <stats name="number of agents">6</stats>
+    <stats name="number of meetings">3</stats>
+    <stats name="number of agents per meeting">2</stats>
+    <stats name="number of time slots">4</stats>
+    <stats name="constraint violation cost">infinity</stats>
+    <stats name="target probability of being unavailable at any given time slot">0.0</stats>
+    <stats name="average probability of being unavailable at any given time slot">0.0</stats>
+    <stats name="maximum random cost of being unavailable at any given time slot">null</stats>
+  </presentation>
+  <agents nbAgents="4">
+    <agent name="a1" />
+    <agent name="a3" />
+    <agent name="a4" />
+    <agent name="a5" />
+  </agents>
+  <domains nbDomains="1">
+    <domain name="slots" nbValues="4">1..4</domain>
+  </domains>
+  <variables nbVariables="3">
+    <variable name="m0" domain="slots" agent="a5" />
+    <variable name="m1" domain="slots" agent="a3" />
+    <variable name="m2" domain="slots" agent="a4" />
+  </variables>
+  <relations nbRelations="2">
+    <relation name="trivial1" semantics="soft" arity="1" nbTuples="1" defaultCost="0">0:1</relation>
+    <relation name="NEQ" semantics="soft" arity="2" nbTuples="4" defaultCost="0">infinity: 1 1|2 2|3 3|4 4</relation>
+  </relations>
+  <constraints nbConstraints="4">
+    <constraint name="m1_neq_m0_a1" arity="2" scope="m1 m0" reference="NEQ" agent="a1" />
+    <constraint name="a3_availability" arity="1" scope="m1" reference="trivial1" agent="a3" />
+    <constraint name="a4_availability" arity="1" scope="m2" reference="trivial1" agent="a4" />
+    <constraint name="m2_neq_m0_a5" arity="2" scope="m2 m0" reference="NEQ" agent="a5" />
+  </constraints>
+</instance>

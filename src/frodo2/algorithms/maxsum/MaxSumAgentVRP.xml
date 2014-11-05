@@ -1,0 +1,82 @@
+<!-- 
+FRODO: a FRamework for Open/Distributed Optimization
+Copyright (C) 2008-2013  Thomas Leaute, Brammert Ottens & Radoslaw Szymanek
+
+FRODO is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+FRODO is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+How to contact the authors: 
+<http://frodo2.sourceforge.net/>
+-->
+
+<!-- Overall definition of the agent
+	- measureTime: whether the simulated time metric should be enabled instead of just measuring wall clock time
+	- measureMsgs: whether to measure the number of messages and the total amount of information sent (WARNING! This is computationally expensive)
+ -->
+<agentDescription className = "frodo2.algorithms.SingleQueueAgent" measureTime = "true" measureMsgs = "false" >
+
+	<!-- The MailMan used when measuring time
+		 - mailmanClass: the class of the mailman to be used
+	-->
+	<mailman mailmanClass = "frodo2.communication.mailer.CentralMailer"/>
+	
+	<!-- The XCSP parser that supports VRP constraints 
+		- displayGraph: if true, displays the constraint graph in DOT format (default = false)
+		- domClass: the class to be used for variable values (must be AddableInteger)
+		- utilClass: the class to be used for utility values (should be AddableReal or AddableBigDecimal)
+		- DOTrenderer: the class to be used to display the constraint graph. Supported values:
+			- empty string: displays the constraint graph in DOT format in the console; 
+			- frodo2.gui.DOTrenderer: renders the constraint graph in a new window. Assumes that Graphviz' "dot" command is on the shell path. 
+		- countNCCCs: whether Non-Concurrent Constraint Checks should be counted (default = false)
+	 -->
+	<parser parserClass = "frodo2.benchmarks.vehiclerouting.XCSPparserVRP" 
+			displayGraph = "true" 
+			domClass = "frodo2.solutionSpaces.AddableInteger" 
+			utilClass = "frodo2.solutionSpaces.AddableReal" 
+			DOTrenderer = ""
+			countNCCCs = "false" />
+
+	<!-- A set of modules, each being parameterized by the following attributes: 
+		- className: the name of the class implementing the module
+		- reportStats (only for StatsReporter modules): whether statistics should be reported to the central controller, if any (default = false)
+		- messages (optional): a list of "message" elements, each parameterized by the following attributes: 
+			- name: the name of the public static String field in the module that identifies the message
+			- value: the type to be used for that message
+			- ownerClass (optional): if present, specifies the name of a class, and the attribute "value" is then interpreted as a public static String field of that class
+	 -->
+	<modules>
+	
+		<!-- Factor graph generator
+			- DOTrenderer: the class to be used to display the factor graph. Supported values:
+				- empty string: displays the factor graph in DOT format in the console; 
+				- frodo2.gui.DOTrenderer: renders the factor graph in a new window. Assumes that Graphviz' "dot" command is on the shell path. 
+			- compile: whether each agent should implicitly compile all its function nodes into a single one
+				MUST be set to "true" if the problem includes involves private inter-agent constraints. 
+		 -->
+		<module className = "frodo2.algorithms.varOrdering.factorgraph.FactorGraphGen" 
+				reportStats = "true" 
+				DOTrenderer = "" 
+				compile = "false" />
+		
+		<!-- The Max-Sum algorithm. Each factor node with no specified owner agent is by convention simulated by the agent owning the first variable in its scope. 
+			- maxNbrIter: the desired maximum number of iterations per node
+			- randomInit (default = true): whether the algorithm should be initialized with random messages (otherwise, the initialization messages are full of zeros)
+		 -->
+		<module className = "frodo2.algorithms.maxsum.MaxSum" 
+				reportStats = "true" 
+				maxNbrIter = "200" 
+				randomInit = "true" />
+
+	</modules>
+</agentDescription>

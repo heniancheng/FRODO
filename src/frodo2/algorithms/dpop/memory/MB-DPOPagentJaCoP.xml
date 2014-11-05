@@ -1,0 +1,169 @@
+<!-- 
+FRODO: a FRamework for Open/Distributed Optimization
+Copyright (C) 2008-2013  Thomas Leaute, Brammert Ottens & Radoslaw Szymanek
+
+FRODO is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+FRODO is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+How to contact the authors: 
+<http://frodo2.sourceforge.net/>
+-->
+
+<!-- Overall definition of the agent
+	- measureTime: whether the simulated time metric should be enabled instead of just measuring wall clock time
+	- measureMsgs: whether to measure the number of messages and the total amount of information sent (WARNING! This is computationally expensive)
+ -->
+<agentDescription className = "frodo2.algorithms.SingleQueueAgent" measureTime = "true" measureMsgs = "false" >
+	
+	<!-- The MailMan used when measuring time
+		 - mailmanClass: the class of the mailman to be used
+	-->
+	<mailman mailmanClass = "frodo2.communication.mailer.CentralMailer"/>
+	
+	<!-- The XCSP parser
+		- parserClass: the class of the parser/subsolver to be used. Currently supported:
+			- frodo2.algorithms.XCSPparser: the default parser that does not consider local subproblems
+			- frodo2.solutionSpaces.JaCoP.JaCoPxcspParser: a parser based on JaCoP that can be used for DCOPs with complex local subproblems
+		- displayGraph: if true, displays the constraint graph in DOT format (default = false)
+		- domClass: the class to be used for variable values; the supported values are: 
+			- frodo2.solutionSpaces.AddableInteger 	(default) for integer-valued variables
+		- utilClass: the class to be used for utility values; the supported values are: 
+			- frodo2.solutionSpaces.AddableInteger 	(default) for integer utilities
+		- DOTrenderer: the class to be used to display the constraint graph. Supported values:
+			- empty string: displays the constraint graph in DOT format in the console; 
+			- frodo2.gui.DOTrenderer: renders the constraint graph in a new window. Assumes that Graphviz' "dot" command is on the shell path. 
+	 -->
+	<parser parserClass = "frodo2.solutionSpaces.JaCoP.JaCoPxcspParser" 
+			displayGraph = "true" 
+			domClass = "frodo2.solutionSpaces.AddableInteger" 
+			utilClass = "frodo2.solutionSpaces.AddableInteger"
+			DOTrenderer = "" />
+
+	<!-- A set of modules, each being parameterized by the following attributes: 
+		- className: the name of the class implementing the module
+		- reportStats (only for StatsReporter modules): whether statistics should be reported to the central controller, if any (default = false)
+		- messages (optional): a list of "message" elements, each parameterized by the following attributes: 
+			- name: the name of the public static String field in the module that identifies the message
+			- value: the type to be used for that message
+			- ownerClass (optional): if present, specifies the name of a class, and the attribute "value" is then interpreted as a public static String field of that class
+	 -->
+	<modules>
+		
+		<!-- Constructs a DFS pseudo-tree for each connected component of the constraint graph, taking care of root election 
+			- DOTrenderer: the class to be used to display the DFS. Supported values:
+				- empty string: displays the DFS in DOT format in the console; 
+				- frodo2.gui.DOTrenderer: renders the DFS in a new window. Assumes that Graphviz' "dot" command is on the shell path. 
+		-->
+		<module className = "frodo2.algorithms.varOrdering.dfs.DFSgenerationParallel" 
+				reportStats = "false"
+				DOTrenderer = "">
+
+			<!-- The heuristic used to choose the root variable. The following heuristics are available:
+				- frodo2.algorithms.heuristics.VarNameHeuristic 					(default) elects the variable with the lexicographically largest name.
+				- frodo2.algorithms.heuristics.MostConnectedHeuristic 			elects the most connected variable. 
+				- frodo2.algorithms.heuristics.LeastConnectedHeuristic 			elects the least connected variable. 
+				- frodo2.algorithms.heuristics.SmallestDomainHeuristic 			elects the variable with smallest domain.  
+				- frodo2.algorithms.heuristics.RandScoringHeuristic 				elects a random variable. 
+				- frodo2.algorithms.heuristics.ScoringHeuristicWithTiebreaker 	can combine two heuristics, the second being used to break ties.
+			 -->
+			<rootElectionHeuristic className = "frodo2.algorithms.heuristics.ScoringHeuristicWithTiebreaker" >
+				<heuristic1 className = "frodo2.algorithms.heuristics.MostConnectedHeuristic" />
+				<heuristic2 className = "frodo2.algorithms.heuristics.ScoringHeuristicWithTiebreaker" >
+					<heuristic1 className = "frodo2.algorithms.heuristics.SmallestDomainHeuristic" />
+					<heuristic2 className = "frodo2.algorithms.heuristics.VarNameHeuristic" />
+				</heuristic2>
+			</rootElectionHeuristic>
+			
+			<!-- The underlying DFS Generation module -->
+			<dfsGeneration className = "frodo2.algorithms.varOrdering.dfs.DFSgeneration" >
+				
+				<!-- The heuristic suggesting which variables should be highest in the DFS tree. The following heuristics are available:
+					- frodo2.algorithms.varOrdering.dfs.DFSgeneration$BlindScoringHeuristic 		(default) uses only local information given by a ScoringHeuristic among the following:
+						- frodo2.algorithms.heuristics.VarNameHeuristic 						(default) elects the variable with the lexicographically largest name.
+						- frodo2.algorithms.heuristics.SmallestDomainHeuristic 				elects the variable with smallest domain.  
+						- frodo2.algorithms.heuristics.RandScoringHeuristic 					elects a random variable. 
+						- frodo2.algorithms.heuristics.ScoringHeuristicWithTiebreaker 		can combine two heuristics, the second being used to break ties.
+					- frodo2.algorithms.varOrdering.dfs.DFSgeneration$ScoreBroadcastingHeuristic 	uses information sent by neighbors based on a ScoringHeuristic among the previous and the following:
+						- frodo2.algorithms.heuristics.MostConnectedHeuristic 				elects the most connected variable. 
+						- frodo2.algorithms.heuristics.LeastConnectedHeuristic 				elects the least connected variable. 
+		 		 -->
+				<dfsHeuristic className = "frodo2.algorithms.varOrdering.dfs.DFSgeneration$ScoreBroadcastingHeuristic" >
+					<scoringHeuristic className = "frodo2.algorithms.heuristics.ScoringHeuristicWithTiebreaker" >
+						<heuristic1 className = "frodo2.algorithms.heuristics.MostConnectedHeuristic" />
+						<heuristic2 className = "frodo2.algorithms.heuristics.SmallestDomainHeuristic" />
+					</scoringHeuristic>
+				</dfsHeuristic>
+			
+				<messages>
+					<message name = "START_MSG_TYPE" 
+							 value = "START_AGENT" 
+							 ownerClass = "frodo2.algorithms.AgentInterface" />
+					<message name = "ROOT_VAR_MSG_TYPE" 
+							 value = "OUTPUT_MSG_TYPE" 
+							 ownerClass = "frodo2.algorithms.varOrdering.election.LeaderElectionMaxID" />
+ 					<message name = "FINISH_MSG_TYPE" 
+							 value = "AGENT_FINISHED" 
+							 ownerClass = "frodo2.algorithms.AgentInterface" />
+				</messages>
+			</dfsGeneration>
+			
+			<messages>
+				<message name = "START_MSG_TYPE" 
+						 value = "START_AGENT" 
+						 ownerClass = "frodo2.algorithms.AgentInterface" />
+			</messages>
+		</module>
+		
+		<!-- MB-DPOP's labeling phase that identifies cluster roots (CRs) and cycle-cut (CC) nodes 
+			- DOTrenderer: the class to be used to display the DFS. Supported values:
+				- empty string: displays the DFS in DOT format in the console; 
+				- frodo2.gui.DOTrenderer: renders the DFS in a new window. Assumes that Graphviz' "dot" command is on the shell path. 
+			- maxDim: the maximum number of variables in a UTIL message
+		 -->
+		<module className = "frodo2.algorithms.dpop.memory.LabelingPhase" 
+				reportStats = "true" 
+				DOTrenderer = "" 
+				maxDim = "10" />
+		
+		<!-- MB-DPOP's memory-bounded UTIL propagation phase -->
+		<module className = "frodo2.algorithms.dpop.memory.MemoryBoundedUTIL" 
+				reportStats = "false" >
+				<message name = "START_MSG_TYPE" 
+						 value = "START_AGENT" 
+						 ownerClass = "frodo2.algorithms.AgentInterface" />
+				<message name = "DFS_MSG_TYPE" 
+						 value = "OUTPUT_MSG_TYPE" 
+						 ownerClass = "frodo2.algorithms.varOrdering.dfs.DFSgeneration" />
+		</module>
+		
+		<!-- Propagates the optimal value assignments top down following the DFS -->
+		<module className = "frodo2.algorithms.dpop.VALUEpropagation" 
+				reportStats = "true" >
+			<messages>
+				<message name = "START_MSG_TYPE" 
+						 value = "START_AGENT" 
+						 ownerClass = "frodo2.algorithms.AgentInterface" />
+				<message name = "DFS_MSG_TYPE" 
+						 value = "OUTPUT_MSG_TYPE" 
+						 ownerClass = "frodo2.algorithms.varOrdering.dfs.DFSgeneration" />
+				<message name = "UTIL_MSG_TYPE" 
+						 value = "OUTPUT_MSG_TYPE" 
+						 ownerClass = "frodo2.algorithms.dpop.UTILpropagation" />
+				<message name = "SEPARATOR_MSG_TYPE" 
+						 value = "SEPARATOR_MSG_TYPE" 
+						 ownerClass = "frodo2.algorithms.dpop.UTILpropagation" />
+			</messages>
+		</module>
+	</modules>
+</agentDescription>

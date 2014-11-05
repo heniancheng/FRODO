@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<instance>
+<presentation name="?" maxConstraintArity="3" format="XCSP 2.1"/>
+
+<domains nbDomains="1">
+<domain name="D0" nbValues="3">0..2</domain>
+</domains>
+
+<variables nbVariables="9">
+<variable name="V0" domain="D0"/>
+<variable name="V1" domain="D0"/>
+<variable name="V2" domain="D0"/>
+<variable name="V3" domain="D0"/>
+<variable name="V4" domain="D0"/>
+<variable name="V5" domain="D0"/>
+<variable name="V6" domain="D0"/>
+<variable name="V7" domain="D0"/>
+<variable name="V8" domain="D0"/>
+</variables>
+
+<constraints nbConstraints="12">
+<constraint name="C0" arity="3" scope="V0 V1 V2" reference="global:allDifferent">
+	<parameters> [ V0 V1 V2 ] </parameters>
+</constraint>
+<constraint name="C1" arity="3" scope="V3 V4 V5" reference="global:allDifferent">
+	<parameters> [ V3 V4 V5 ] </parameters>
+</constraint>
+<constraint name="C2" arity="3" scope="V6 V7 V8" reference="global:allDifferent">
+	<parameters> [ V6 V7 V8 ] </parameters>
+</constraint>
+<constraint name="C3" arity="3" scope="V0 V3 V6" reference="global:allDifferent">
+	<parameters> [ V0 V3 V6 ] </parameters>
+</constraint>
+<constraint name="C4" arity="3" scope="V1 V4 V7" reference="global:allDifferent">
+	<parameters> [ V1 V4 V7 ] </parameters>
+</constraint>
+<constraint name="C5" arity="3" scope="V2 V5 V8" reference="global:allDifferent">
+	<parameters> [ V2 V5 V8 ] </parameters>
+</constraint>
+<constraint name="C6" arity="3" scope="V6 V1 V5" reference="global:allDifferent">
+	<parameters> [ V6 V1 V5 ] </parameters>
+</constraint>
+<constraint name="C7" arity="3" scope="V3 V7 V2" reference="global:allDifferent">
+	<parameters> [ V3 V7 V2 ] </parameters>
+</constraint>
+<constraint name="C8" arity="3" scope="V0 V4 V8" reference="global:allDifferent">
+	<parameters> [ V0 V4 V8 ] </parameters>
+</constraint>
+<constraint name="C9" arity="3" scope="V0 V5 V7" reference="global:allDifferent">
+	<parameters> [ V0 V5 V7 ] </parameters>
+</constraint>
+<constraint name="C10" arity="3" scope="V1 V3 V8" reference="global:allDifferent">
+	<parameters> [ V1 V3 V8 ] </parameters>
+</constraint>
+<constraint name="C11" arity="3" scope="V2 V4 V6" reference="global:allDifferent">
+	<parameters> [ V2 V4 V6 ] </parameters>
+</constraint>
+</constraints>
+</instance>
